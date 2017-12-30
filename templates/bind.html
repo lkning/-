@@ -1,0 +1,45 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% if obj.wx_id %}
+    <h1>已关注</h1>
+{% else %}
+    <div style="width: 600px;margin: 0 auto">
+        <h1>请关注公司公众号，用于消息提醒（必须）</h1>
+        <div>
+            <h3>第一步：关注服务号</h3>
+            <img style="height: 100px;width: 100px" src="{% static "img/luffy.jpeg" %}">
+        </div>
+        <input type="button" value="下一步【获取绑定二维码】" onclick="getBindUserQcode()">
+        <div>
+            <h3>第二步：绑定个人账户</h3>
+            <div id="qrcode" style="width: 250px;height: 250px;background-color: white;margin: 100px auto;">
+
+            </div>
+        </div>
+    </div>
+{% endif %}
+<script src="{% static "js/jquery.min.js" %}"></script>
+<script src="{% static "js/jquery.qrcode.min.js" %}"></script>
+<script src="{% static "js/qrcode.js" %}"></script>
+<script>
+    function getBindUserQcode() {
+        $.ajax({
+            url: '/bind_qcode/',
+            type: 'GET',
+            success: function (result) {
+                // {'code':'1000','data':"https://open.weixin.qq.com/connect/oauth2/authorize?appid={appid}&redirect_uri={redirect_uri}&r"}
+                $('#qrcode').empty().qrcode({text: result.data});
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
